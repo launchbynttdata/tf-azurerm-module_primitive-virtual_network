@@ -1,10 +1,10 @@
-module github.com/nexient-llc/tf-azurerm-module_primitive-virtual_network
+module github.com/launchbynttdata/tf-azurerm-module_primitive-virtual_network
 
 go 1.20
 
 require (
 	github.com/gruntwork-io/terratest v0.43.12
-	github.com/nexient-llc/lcaf-component-terratest-common v1.0.1
+	github.com/launchbynttdata/lcaf-component-terratest v1.0.1
 	github.com/stretchr/testify v1.8.1
 )
 
