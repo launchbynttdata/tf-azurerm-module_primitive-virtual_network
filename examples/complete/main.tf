@@ -37,24 +37,20 @@ module "resource_group" {
 module "vnet" {
   source = "../.."
 
-  vnet_location                                         = var.region
-  resource_group_name                                   = module.resource_group.name
-  vnet_name                                             = module.resource_names["vnet"].standard
-  address_space                                         = var.address_space
-  subnet_names                                          = var.subnet_names
-  subnet_prefixes                                       = var.subnet_prefixes
-  bgp_community                                         = null
-  ddos_protection_plan                                  = null
-  dns_servers                                           = []
-  nsg_ids                                               = {}
-  route_tables_ids                                      = {}
-  subnet_delegation                                     = {}
-  subnet_enforce_private_link_endpoint_network_policies = {}
-  subnet_enforce_private_link_service_network_policies  = {}
-  subnet_service_endpoints                              = {}
-  tracing_tags_enabled                                  = false
-  tracing_tags_prefix                                   = ""
-  use_for_each                                          = true
+  vnet_location            = var.region
+  resource_group_name      = module.resource_group.name
+  vnet_name                = module.resource_names["vnet"].standard
+  address_space            = var.address_space
+  subnet_names             = var.subnet_names
+  subnet_prefixes          = var.subnet_prefixes
+  bgp_community            = null
+  ddos_protection_plan     = null
+  dns_servers              = []
+  nsg_ids                  = {}
+  route_tables_ids         = {}
+  subnet_delegation        = {}
+  subnet_service_endpoints = {}
+  use_for_each             = true
 
   tags = merge(var.tags, { resource_name = module.resource_names["vnet"].standard })
 
