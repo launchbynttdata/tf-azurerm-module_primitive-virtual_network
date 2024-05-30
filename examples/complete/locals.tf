@@ -10,26 +10,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-output "vnet_id" {
-  value = module.vnet.vnet_id
-}
+locals {
+  resource_group_name = module.resource_names["rg"].minimal_random_suffix
+  vnet_name           = module.resource_names["vnet"].minimal_random_suffix
 
-output "vnet_name" {
-  value = module.vnet.vnet_name
-}
+  default_tags = {
+    provisioner = "terraform"
+  }
 
-output "resource_group_id" {
-  value = module.resource_group.id
-}
-
-output "resource_group_name" {
-  value = module.resource_group.name
-}
-
-output "subnet_name_id_map" {
-  value = module.vnet.subnet_name_id_map
-}
-
-output "subnet_map" {
-  value = module.vnet.subnet_map
+  tags = merge(local.default_tags, var.tags)
 }

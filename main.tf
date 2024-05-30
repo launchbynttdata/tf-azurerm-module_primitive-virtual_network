@@ -17,7 +17,6 @@ resource "azurerm_virtual_network" "vnet" {
   resource_group_name = var.resource_group_name
   bgp_community       = var.bgp_community
   dns_servers         = var.dns_servers
-  tags                = var.tags
 
   dynamic "ddos_protection_plan" {
     for_each = var.ddos_protection_plan != null ? [var.ddos_protection_plan] : []
@@ -27,23 +26,23 @@ resource "azurerm_virtual_network" "vnet" {
       id     = ddos_protection_plan.value.id
     }
   }
+
+  tags = local.tags
 }
 
+resource "azurerm_subnet" "subnet" {
+  for_each = var.subnets
 
-
-resource "azurerm_subnet" "subnet_count" {
-  count = var.use_for_each ? 0 : length(var.subnet_names)
-
-  address_prefixes                              = [var.subnet_prefixes[count.index]]
-  name                                          = var.subnet_names[count.index]
+  address_prefixes                              = [each.value.prefix]
+  name                                          = each.key
   resource_group_name                           = var.resource_group_name
   virtual_network_name                          = azurerm_virtual_network.vnet.name
-  private_endpoint_network_policies_enabled     = lookup(var.subnet_private_endpoint_network_policies_enabled, var.subnet_names[count.index], false)
-  private_link_service_network_policies_enabled = lookup(var.subnet_private_link_service_network_policies_enabled, var.subnet_names[count.index], false)
-  service_endpoints                             = lookup(var.subnet_service_endpoints, var.subnet_names[count.index], null)
+  private_endpoint_network_policies_enabled     = each.value.private_endpoint_network_policies_enabled
+  private_link_service_network_policies_enabled = each.value.private_link_service_network_policies_enabled
+  service_endpoints                             = each.value.service_endpoints
 
   dynamic "delegation" {
-    for_each = lookup(var.subnet_delegation, var.subnet_names[count.index], {})
+    for_each = each.value.delegation == null ? [] : [each.value.delegation]
 
     content {
       name = delegation.key
@@ -55,43 +54,25 @@ resource "azurerm_subnet" "subnet_count" {
     }
   }
 }
-
-resource "azurerm_subnet" "subnet_for_each" {
-  for_each = var.use_for_each ? toset(var.subnet_names) : []
-
-  address_prefixes                              = [local.subnet_names_prefixes[each.value]]
-  name                                          = each.value
-  resource_group_name                           = var.resource_group_name
-  virtual_network_name                          = azurerm_virtual_network.vnet.name
-  private_endpoint_network_policies_enabled     = lookup(var.subnet_private_endpoint_network_policies_enabled, each.value, false)
-  private_link_service_network_policies_enabled = lookup(var.subnet_private_link_service_network_policies_enabled, each.value, false)
-  service_endpoints                             = lookup(var.subnet_service_endpoints, each.value, null)
-
-  dynamic "delegation" {
-    for_each = lookup(var.subnet_delegation, each.value, {})
-
-    content {
-      name = delegation.key
-
-      service_delegation {
-        name    = lookup(delegation.value, "service_name")
-        actions = lookup(delegation.value, "service_actions", [])
-      }
-    }
-  }
-}
-
 
 resource "azurerm_subnet_network_security_group_association" "vnet" {
-  for_each = var.nsg_ids
+  for_each = {
+    for subnet_name, subnet_configuration in var.subnets :
+    subnet_name => subnet_configuration.network_security_group_id
+    if subnet_configuration.network_security_group_id != null
+  }
 
   network_security_group_id = each.value
-  subnet_id                 = local.azurerm_subnets_name_id_map[each.key]
+  subnet_id                 = azurerm_subnet.subnet[each.key].id
 }
 
 resource "azurerm_subnet_route_table_association" "vnet" {
-  for_each = var.route_tables_ids
+  for_each = {
+    for subnet_name, subnet_configuration in var.subnets :
+    subnet_name => subnet_configuration.route_table_id
+    if subnet_configuration.route_table_id != null
+  }
 
   route_table_id = each.value
-  subnet_id      = local.azurerm_subnets_name_id_map[each.key]
+  subnet_id      = azurerm_subnet.subnet[each.key].id
 }

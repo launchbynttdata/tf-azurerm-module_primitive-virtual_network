@@ -16,7 +16,7 @@ variable "product_family" {
     Example: org_name, department_name.
   EOF
   type        = string
-  default     = "dso"
+  default     = "launch"
 }
 
 variable "product_service" {
@@ -25,13 +25,13 @@ variable "product_service" {
     For example, backend, frontend, middleware etc.
   EOF
   type        = string
-  default     = "demo"
+  default     = "vnet"
 }
 
 variable "environment" {
   description = "Environment in which the resource should be provisioned like dev, qa, prod etc."
   type        = string
-  default     = "dev"
+  default     = "sandbox"
 }
 
 variable "environment_number" {
@@ -41,7 +41,7 @@ variable "environment_number" {
 }
 
 variable "region" {
-  description = "AWS Region in which the infra needs to be provisioned"
+  description = "Azure Region in which the infra needs to be provisioned"
   type        = string
   default     = "eastus"
 }
@@ -72,16 +72,21 @@ variable "address_space" {
   description = "The address space that is used by the virtual network."
 }
 
-variable "subnet_names" {
-  type        = list(string)
-  default     = ["subnet-1", "subnet-2"]
-  description = "A list of public subnets inside the vNet."
-}
-
-variable "subnet_prefixes" {
-  type        = list(string)
-  default     = ["10.6.1.0/24", "10.6.2.0/24"]
-  description = "The address prefix to use for the subnet."
+variable "subnets" {
+  description = "A mapping of subnet names to their configurations."
+  type = map(object({
+    prefix = string
+    delegation = optional(object({
+      name    = string
+      actions = list(string)
+    }), null)
+    service_endpoints                             = optional(list(string), []),
+    private_endpoint_network_policies_enabled     = optional(bool, false)
+    private_link_service_network_policies_enabled = optional(bool, false)
+    network_security_group_id                     = optional(string, null)
+    route_table_id                                = optional(string, null)
+  }))
+  default = {}
 }
 
 variable "tags" {

@@ -23,12 +23,12 @@ output "vnet_name" {
   value       = azurerm_virtual_network.vnet.name
 }
 
-output "vnet_subnets" {
-  description = "The ids of subnets created inside the newly created vNet"
-  value       = local.azurerm_subnets[*].id
+output "subnet_name_id_map" {
+  description = "Maps the names of the subnets to the ID created."
+  value       = local.azurerm_subnets_name_id_map
 }
 
-output "vnet_subnets_name_id" {
-  description = "Can be queried subnet-id by subnet name by using lookup(module.vnet.vnet_subnets_name_id, subnet1)"
-  value       = local.azurerm_subnets_name_id_map
+output "subnet_map" {
+  description = "Maps the name of the subnets to their full outputs."
+  value       = azurerm_subnet.subnet
 }
