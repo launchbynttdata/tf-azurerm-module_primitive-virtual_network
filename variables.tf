@@ -50,19 +50,6 @@ variable "dns_servers" {
   description = "The DNS servers to be used with vNet."
 }
 
-variable "nsg_ids" {
-  type = map(string)
-  default = {
-  }
-  description = "A map of subnet name to Network Security Group IDs"
-}
-
-variable "route_tables_ids" {
-  type        = map(string)
-  default     = {}
-  description = "A map of subnet name to Route table ids"
-}
-
 variable "subnets" {
   description = "A mapping of subnet names to their configurations."
   type = map(object({
