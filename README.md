@@ -156,4 +156,5 @@ No modules.
 | <a name="output_vnet_name"></a> [vnet\_name](#output\_vnet\_name) | The Name of the newly created vNet |
 | <a name="output_subnet_name_id_map"></a> [subnet\_name\_id\_map](#output\_subnet\_name\_id\_map) | Maps the names of the subnets to the ID created. |
 | <a name="output_subnet_map"></a> [subnet\_map](#output\_subnet\_map) | Maps the name of the subnets to their full outputs. |
+| <a name="output_subnet_route_associations"></a> [subnet\_route\_associations](#output\_subnet\_route\_associations) | n/a |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
