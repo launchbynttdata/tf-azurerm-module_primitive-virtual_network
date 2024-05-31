@@ -21,7 +21,11 @@ locals {
     resource_name = var.vnet_name
   }
 
-  route_table_data_names = { for subnet_name, subnet_definition in var.subnets : subnet_definition.route_table_name => subnet_definition.route_table_name }
+  route_table_data_names = {
+    for subnet_name, subnet_definition in var.subnets :
+    subnet_definition.route_table_name => subnet_definition.route_table_name
+    if subnet_definition.route_table_name != null
+  }
 
   subnet_route_associations = {
     for subnet_name, subnet_definition in var.subnets :
