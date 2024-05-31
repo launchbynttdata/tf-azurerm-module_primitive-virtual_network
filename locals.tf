@@ -21,5 +21,12 @@ locals {
     resource_name = var.vnet_name
   }
 
+  route_table_data_names = toset([for subnet_name, subnet_definition in var.subnets : subnet_definition.route_table_name])
+
+  subnet_route_associations = {
+    for subnet_name, subnet_definition in var.subnets :
+    subnet_name => subnet_definition.route_table_id != null ? subnet_definition.route_table_id : subnet_definition.route_table_name != null ? data.azurerm_route_table.existing_table[subnet_definition.route_table_name].id : null
+  }
+
   tags = merge(local.default_tags, var.tags)
 }

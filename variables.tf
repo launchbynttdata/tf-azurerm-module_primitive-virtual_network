@@ -62,14 +62,19 @@ variable "subnets" {
     private_link_service_network_policies_enabled = optional(bool, false)
     network_security_group_id                     = optional(string, null)
     route_table_id                                = optional(string, null)
+    route_table_name                              = optional(string, null)
     extra_tags                                    = optional(map(string), {})
   }))
   default = {}
+
+  validation {
+    condition     = alltrue([for subnet_name, subnet in var.subnets : subnet.route_table_id == null || subnet.route_table_name == null ? true : subnet.route_table_id == null && subnet.route_table_name == null ? true : false])
+    error_message = "Subnets may define either a route_table_id or a route_table_name, but not both."
+  }
 }
 
 variable "vnet_name" {
   type        = string
-  default     = "acctvnet"
   description = "Name of the vnet to create"
 }
 
