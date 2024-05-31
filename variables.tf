@@ -24,7 +24,6 @@ variable "vnet_location" {
 
 variable "address_space" {
   type        = list(string)
-  default     = ["10.0.0.0/16"]
   description = "The address space that is used by the virtual network."
 }
 
