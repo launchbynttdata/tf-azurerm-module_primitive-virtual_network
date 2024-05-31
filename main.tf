@@ -55,7 +55,7 @@ resource "azurerm_subnet" "subnet" {
   }
 }
 
-resource "azurerm_subnet_network_security_group_association" "vnet" {
+resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
   for_each = {
     for subnet_name, subnet_configuration in var.subnets :
     subnet_name => subnet_configuration.network_security_group_id
@@ -66,7 +66,7 @@ resource "azurerm_subnet_network_security_group_association" "vnet" {
   subnet_id                 = azurerm_subnet.subnet[each.key].id
 }
 
-resource "azurerm_subnet_route_table_association" "vnet" {
+resource "azurerm_subnet_route_table_association" "subnet_rt_association" {
   for_each = {
     for subnet_name, subnet_configuration in var.subnets :
     subnet_name => subnet_configuration.route_table_id
