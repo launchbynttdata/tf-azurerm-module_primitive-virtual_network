@@ -69,7 +69,7 @@ resource "azurerm_subnet_network_security_group_association" "subnet_nsg_associa
 resource "azurerm_subnet_route_table_association" "subnet_rt_association" {
   for_each = local.subnet_route_associations
 
-  route_table_id = each.key
+  route_table_id = each.value
   subnet_id      = azurerm_subnet.subnet[each.key].id
 }
 
