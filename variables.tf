@@ -63,7 +63,6 @@ variable "subnets" {
     network_security_group_id                     = optional(string, null)
     route_table_id                                = optional(string, null)
     route_table_name                              = optional(string, null)
-    extra_tags                                    = optional(map(string), {})
   }))
   default = {}
 
@@ -81,5 +80,5 @@ variable "vnet_name" {
 variable "tags" {
   type        = map(string)
   default     = {}
-  description = "The tags to associate with your network and subnets."
+  description = "The tags to associate with resources provisioned by this module."
 }
