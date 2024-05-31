@@ -11,11 +11,15 @@
 // limitations under the License.
 
 locals {
-  subnet_names_prefixes = zipmap(var.subnet_names, var.subnet_prefixes)
-
-  azurerm_subnets = var.use_for_each ? [for s in azurerm_subnet.subnet_for_each : s] : [for s in azurerm_subnet.subnet_count : s]
   azurerm_subnets_name_id_map = {
-    for index, subnet in local.azurerm_subnets :
+    for subnet in azurerm_subnet.subnet :
     subnet.name => subnet.id
   }
+
+  default_tags = {
+    provisioner   = "terraform"
+    resource_name = var.vnet_name
+  }
+
+  tags = merge(local.default_tags, var.tags)
 }

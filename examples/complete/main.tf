@@ -11,7 +11,8 @@
 // limitations under the License.
 
 module "resource_names" {
-  source = "git::https://github.com/launchbynttdata/tf-launch-module_library-resource_name.git?ref=1.0.0"
+  source  = "d2lqlh14iel5k2.cloudfront.net/module_library/resource_name/launch"
+  version = "~> 1.0"
 
   for_each = var.resource_names_map
 
@@ -25,34 +26,28 @@ module "resource_names" {
 }
 
 module "resource_group" {
-  source = "git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-resource_group.git?ref=1.0.0"
+  source  = "d2lqlh14iel5k2.cloudfront.net/module_primitive/resource_group/azurerm"
+  version = "~> 1.0"
 
-  name     = module.resource_names["rg"].standard
+  name     = local.resource_group_name
   location = var.region
 
-  tags = merge(var.tags, { resource_name = module.resource_names["rg"].standard })
-
+  tags = local.tags
 }
 
 module "vnet" {
   source = "../.."
 
-  vnet_location            = var.region
-  resource_group_name      = module.resource_group.name
-  vnet_name                = module.resource_names["vnet"].standard
-  address_space            = var.address_space
-  subnet_names             = var.subnet_names
-  subnet_prefixes          = var.subnet_prefixes
-  bgp_community            = null
-  ddos_protection_plan     = null
-  dns_servers              = []
-  nsg_ids                  = {}
-  route_tables_ids         = {}
-  subnet_delegation        = {}
-  subnet_service_endpoints = {}
-  use_for_each             = true
+  vnet_location        = var.region
+  resource_group_name  = local.resource_group_name
+  vnet_name            = local.vnet_name
+  address_space        = var.address_space
+  bgp_community        = null
+  ddos_protection_plan = null
+  dns_servers          = []
+  subnets              = var.subnets
 
-  tags = merge(var.tags, { resource_name = module.resource_names["vnet"].standard })
+  tags = local.tags
 
   depends_on = [module.resource_group]
 }
