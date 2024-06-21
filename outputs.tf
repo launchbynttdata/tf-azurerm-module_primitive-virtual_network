@@ -32,3 +32,7 @@ output "subnet_map" {
   description = "Maps the name of the subnets to their full outputs."
   value       = azurerm_subnet.subnet
 }
+
+output "subnet_route_associations" {
+  value = local.subnet_route_associations
+}

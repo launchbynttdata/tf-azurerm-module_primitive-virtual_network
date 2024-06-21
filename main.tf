@@ -67,12 +67,15 @@ resource "azurerm_subnet_network_security_group_association" "subnet_nsg_associa
 }
 
 resource "azurerm_subnet_route_table_association" "subnet_rt_association" {
-  for_each = {
-    for subnet_name, subnet_configuration in var.subnets :
-    subnet_name => subnet_configuration.route_table_id
-    if subnet_configuration.route_table_id != null
-  }
+  for_each = local.subnet_route_associations
 
   route_table_id = each.value
   subnet_id      = azurerm_subnet.subnet[each.key].id
+}
+
+data "azurerm_route_table" "existing_table" {
+  for_each = local.route_table_data_names
+
+  name                = each.key
+  resource_group_name = var.resource_group_name
 }
