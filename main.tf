@@ -42,7 +42,7 @@ resource "azurerm_subnet" "subnet" {
   service_endpoints                             = each.value.service_endpoints
 
   dynamic "delegation" {
-    for_each = each.value.delegation == null ? [] : [each.value.delegation]
+    for_each = each.value.delegation
 
     content {
       name = delegation.key
