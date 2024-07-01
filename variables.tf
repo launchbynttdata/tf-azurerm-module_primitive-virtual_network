@@ -53,10 +53,10 @@ variable "subnets" {
   description = "A mapping of subnet names to their configurations."
   type = map(object({
     prefix = string
-    delegation = optional(object({
+    delegation = optional(map(object({
       service_name    = string
       service_actions = list(string)
-    }), null)
+    })), {})
     service_endpoints                             = optional(list(string), []),
     private_endpoint_network_policies_enabled     = optional(bool, false)
     private_link_service_network_policies_enabled = optional(bool, false)

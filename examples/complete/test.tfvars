@@ -11,5 +11,11 @@ subnets = {
   }
   subnet_d = {
     prefix = "172.16.0.192/26"
+    delegation = {
+      dns-resolver = {
+        service_name    = "Microsoft.Network/dnsResolvers"
+        service_actions = ["Microsoft.Network/virtualNetworks/read"]
+      }
+    }
   }
 }
