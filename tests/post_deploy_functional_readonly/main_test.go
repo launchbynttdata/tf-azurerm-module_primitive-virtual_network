@@ -32,5 +32,5 @@ func TestVnetModule(t *testing.T) {
 		SetTestConfigFileName(infraTFVarFileNameDefault).
 		SetTestConfigFolderName(testConfigsExamplesFolderDefault).
 		Build()
-	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestVnet)
+	lib.RunNonDestructiveTest(t, *ctx, testimpl.TestVnet)
 }
