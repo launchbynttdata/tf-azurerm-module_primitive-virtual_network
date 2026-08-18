@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	testConfigsExamplesFolderDefault = "../../examples"
+	testConfigsExamplesFolderDefault = "../../examples/complete"
 	infraTFVarFileNameDefault        = "test.tfvars"
 )
 
@@ -37,5 +37,5 @@ func TestVnetModule(t *testing.T) {
 			},
 		}).
 		Build()
-	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestVnet)
+	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestComposableVnet)
 }
