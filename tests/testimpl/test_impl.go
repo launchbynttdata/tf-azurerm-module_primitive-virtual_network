@@ -1,6 +1,7 @@
 package common
 
 import (
+	"context"
 	"os"
 	"testing"
 
@@ -17,17 +18,17 @@ func TestComposableVnet(t *testing.T, ctx types.TestContext) {
 		t.Fatal("ARM_SUBSCRIPTION_ID environment variable is not set")
 	}
 
-	vnetId := terraform.Output(t, ctx.TerratestTerraformOptions(), "vnet_id")
-	rgId := terraform.Output(t, ctx.TerratestTerraformOptions(), "resource_group_id")
-	vnetName := terraform.Output(t, ctx.TerratestTerraformOptions(), "vnet_name")
-	rgName := terraform.Output(t, ctx.TerratestTerraformOptions(), "resource_group_name")
+	vnetId := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "vnet_id")
+	rgId := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "resource_group_id")
+	vnetName := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "vnet_name")
+	rgName := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "resource_group_name")
 	t.Run("VnetExists", func(t *testing.T) {
 
-		assert.True(t, azure.VirtualNetworkExists(t, vnetName, rgName, subscriptionId), "Virtual Network must exist")
+		assert.True(t, azure.VirtualNetworkExistsContext(t, t.Context(), vnetName, rgName, subscriptionId), "Virtual Network must exist")
 	})
 	t.Run("RgExists", func(t *testing.T) {
 
-		assert.True(t, azure.ResourceGroupExists(t, rgName, subscriptionId), "Resource Group must exist")
+		assert.True(t, azure.ResourceGroupExistsContext(t, t.Context(), rgName, subscriptionId), "Resource Group must exist")
 	})
 
 	t.Run("TfOutputsNotEmpty", func(t *testing.T) {
